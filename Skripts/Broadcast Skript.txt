@@ -1,0 +1,25 @@
+Broadcast Skript:
+-
+
+Explanation:
+The line every 30 minutes: sets a timer that triggers the following action every 30 minutes.
+The broadcast command sends the specified message to all players online on the server.
+You can add this code to your Skript file, and it will automatically start broadcasting the message at the specified interval!
+
+Customize: 
+please change the discord link to your discord server link
+and you can change the time interval eg. 20 minutes 
+you can change the message within the "" to whatever you want 
+e.g "@blackmilkez is the best"
+
+
+---------------------
+Skript:
+
+every 30 minutes:
+    broadcast "Join our Discord: https://discord.gg/3nQEf5ZU"
+--------------------
+
+Work by @blackmilkez
+
+

@@ -1,0 +1,37 @@
+GTNT SKRIPT
+-
+
+
+Explanation:
+When a player runs the /gtnt command, 100 TNT blocks will spawn around them.
+The TNT will spawn in a random position within a 10-block radius horizontally (_x and _z) and up to 2 blocks vertically (_y).
+The TNT is "primed," meaning it will explode after the usual fuse time.
+This script generates a chaotic explosion with 100 TNT blocks! Feel free to adjust the radius or number of TNT blocks if needed.
+
+
+----------
+Skript:
+
+command /gtnt:
+    trigger:
+        send "&cSpawning 100 blocks of TNT around you!" to player
+        loop 100 times:
+            set {_x} to random integer between -10 and 10
+            set {_y} to random integer between -2 and 2
+            set {_z} to random integer between -10 and 10
+            set {_location} to location of player
+            add {_x} to x-coordinate of {_location}
+            add {_y} to y-coordinate of {_location}
+            add {_z} to z-coordinate of {_location}
+            spawn primed tnt at {_location}
+
+
+-------------------
+
+Work by @blackmilkez
+
+
+
+
+
+

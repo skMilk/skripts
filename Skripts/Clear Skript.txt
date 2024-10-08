@@ -1,0 +1,25 @@
+Clear Command:
+-
+
+
+Explanation:
+When a player runs the /clear command, a message is sent to them to indicate that placed blocks are being cleared.
+The script loops through all blocks within a 1000-block radius around the player.
+If a block is not air and was placed by a player, it sets that block to air, effectively removing it.
+Blocks that were not placed by players (like natural terrain) will remain unchanged.
+Note:
+To check if a block is placed by a player, you might need an additional plugin or Skript addon that provides this functionality, as the basic Skript language does not include built-in functionality for determining block ownership. If you don't have such a system, consider using a different approach, like clearing specific types of blocks (e.g., only certain types of blocks like dirt, stone, etc.) instead.
+Make sure you have the appropriate permissions set up, or feel free to remove the permission line if you want the command to be available to all players!
+-----------------
+Skript:
+
+command /clear:
+    permission: skript.clear
+    trigger:
+        send "&cClearing all placed blocks in a 1000 block radius!" to player
+        loop all blocks in radius 1000 around player:
+            if loop-block is not air:
+                if loop-block is placed by a player:
+                    set loop-block to air
+------------------
+Work by @blackmilkez

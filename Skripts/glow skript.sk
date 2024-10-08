@@ -1,0 +1,39 @@
+GLOW SKRIPT
+-
+
+
+Explanation:
+-
+The script uses a variable {expose::*} to track whether the player has "exposed" other players.
+When the player runs /expose, the script checks if they have already exposed players. If not, it sets the variable to true and makes nearby players glow for the command user.
+If the player runs the command again, it sets the variable to false, and the glowing effect is removed.
+This setup ensures that the glow lasts until the player runs /expose again to toggle it off.
+The script will make players glow only for the person running the command, and the other players will not know they are glowing.
+No messages are sent to any other players except the player who ran the command.
+This way, only the command user sees the glow effect, and other players remain unaware.
+--------------
+Skript: 
+
+variables:
+    {expose::*} = false
+
+command /expose:
+    trigger:
+        if {expose::%player%} is false:
+            set {expose::%player%} to true
+            send "&cYou are now exposing all players within a 100 block radius!" to player
+            loop all players in radius 100 around player:
+                make loop-player glow with red for player
+        else:
+            set {expose::%player%} to false
+            send "&aYou have stopped exposing players!" to player
+            loop all players in radius 100 around player:
+                make loop-player stop glowing for player
+-----------------
+
+Work by @blackmilkez
+
+
+
+
+

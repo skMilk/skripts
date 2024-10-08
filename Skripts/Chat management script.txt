@@ -1,0 +1,188 @@
+Chat management script:
+
+This chat management Skript provides a robust system for managing player interactions in the chat, including muting players, locking and unlocking the chat, clearing messages, and filtering out inappropriate language through a blacklist. By using this Skript, server admins can maintain a more controlled and respectful chat environment.
+
+Feel free to modify it 
+-
+
+Explanation:
+
+Mute Command: /mute <player>
+
+Function: Allows an admin to mute a specified player.
+Behavior:
+If the specified player is already muted, it informs the admin.
+When a player is muted, a message is sent to all players indicating that the player has been muted.
+Permission: chat.mute
+Unmute Command: /unmute <player>
+
+Function: Allows an admin to unmute a specified player.
+Behavior:
+If the player is not muted, it informs the admin.
+When a player is unmuted, a message is sent to all players indicating that the player has been unmuted.
+Permission: chat.unmute
+
+-----------------
+
+Clear Chat Command: /clearchat
+
+Function: Clears the chat for all players on the server.
+Behavior:
+Sends 100 empty messages to effectively clear the chat.
+Confirms to the admin that the chat has been cleared.
+Permission: chat.clearchat
+
+----------------------
+
+Lock Chat Command: /lockchat
+
+Function: Prevents all players from sending messages.
+Behavior:
+If the chat is already locked, it informs the admin.
+Broadcasts a message to all players indicating that the chat has been locked.
+Permission: chat.lock
+Unlock Chat Command: /unlockchat
+
+Function: Allows players to send messages again.
+Behavior:
+If the chat is not locked, it informs the admin.
+Broadcasts a message to all players indicating that the chat has been unlocked.
+Permission: chat.unlock
+
+------------------------
+
+Add to Blacklist Command: /blacklist add <text>
+
+Function: Allows an admin to add a specific word to the blacklist.
+Behavior:
+If the word is already in the blacklist, it informs the admin.
+Confirms to the admin that the word has been added to the blacklist.
+Permission: chat.blacklist.add
+Remove from Blacklist Command: /blacklist remove <text>
+
+Function: Allows an admin to remove a specific word from the blacklist.
+Behavior:
+If the word is not in the blacklist, it informs the admin.
+Confirms to the admin that the word has been removed from the blacklist.
+Permission: chat.blacklist.remove
+Chat Event Handling:
+
+
+Muting:
+If a muted player attempts to send a message, the message is canceled, and the player is informed that they cannot send messages.
+Locking:
+If the chat is locked, any player attempting to send a message will have their message canceled and will receive a notification that the chat is locked.
+Blacklist Checking:
+When a player sends a message, the Skript checks if it contains any words from the blacklist.
+If a blacklisted word is found, the message is canceled, and the player receives a notification indicating which word triggered the block.
+
+
+
+-------
+
+SKRIPT
+
+------
+
+# Variables to keep track of muted players, chat lock status, and blacklisted words
+variables:
+    {muted::*} = false
+    {chat.locked} = false
+    {blacklist::*} = {"badword1", "badword2", "badword3"} # Add blacklisted words here
+
+# Command to mute a player
+command /mute <player>:
+    permission: chat.mute
+    trigger:
+        if arg-1 is not set:
+            send "&cPlease specify a player to mute!" to player
+            stop
+        if {muted::%arg-1%} is true:
+            send "&c%arg-1% is already muted!" to player
+            stop
+        set {muted::%arg-1%} to true
+        send "&aYou have muted %arg-1%!" to player
+        send "&c%arg-1% has been muted!" to all players
+
+# Command to unmute a player
+command /unmute <player>:
+    permission: chat.unmute
+    trigger:
+        if arg-1 is not set:
+            send "&cPlease specify a player to unmute!" to player
+            stop
+        if {muted::%arg-1%} is false:
+            send "&c%arg-1% is not muted!" to player
+            stop
+        delete {muted::%arg-1%}
+        send "&aYou have unmuted %arg-1%!" to player
+        send "&a%arg-1% has been unmuted!" to all players
+
+# Command to clear chat
+command /clearchat:
+    permission: chat.clearchat
+    trigger:
+        loop 100 times:
+            broadcast ""
+        send "&aChat has been cleared!" to player
+
+# Command to lock chat
+command /lockchat:
+    permission: chat.lock
+    trigger:
+        if {chat.locked} is true:
+            send "&cChat is already locked!" to player
+            stop
+        set {chat.locked} to true
+        broadcast "&cChat has been locked! No messages can be sent."
+
+# Command to unlock chat
+command /unlockchat:
+    permission: chat.unlock
+    trigger:
+        if {chat.locked} is false:
+            send "&cChat is not locked!" to player
+            stop
+        delete {chat.locked}
+        broadcast "&aChat has been unlocked! Players can now send messages."
+
+# Command to add a word to the blacklist
+command /blacklist add <text>:
+    permission: chat.blacklist.add
+    trigger:
+        if {blacklist::%arg-1%} is set:
+            send "&cThe word '%arg-1%' is already blacklisted!" to player
+            stop
+        set {blacklist::%arg-1%} to true
+        send "&aThe word '%arg-1%' has been added to the blacklist!" to player
+
+# Command to remove a word from the blacklist
+command /blacklist remove <text>:
+    permission: chat.blacklist.remove
+    trigger:
+        if {blacklist::%arg-1%} is not set:
+            send "&cThe word '%arg-1%' is not in the blacklist!" to player
+            stop
+        delete {blacklist::%arg-1%}
+        send "&aThe word '%arg-1%' has been removed from the blacklist!" to player
+
+# Message event to check for muted players, locked chat, and blacklisted words
+on chat:
+    if {muted::%player%} is true:
+        cancel event
+        send "&cYou are muted and cannot send messages!" to player
+        stop
+    if {chat.locked} is true:
+        cancel event
+        send "&cChat is locked! You cannot send messages." to player
+        stop
+    loop {blacklist::*}:
+        if arg-1 contains loop-value:
+            cancel event
+            send "&cYour message contains a blacklisted word: %loop-value%." to player
+            stop
+
+
+-------
+
+Work By @blackmilkez
